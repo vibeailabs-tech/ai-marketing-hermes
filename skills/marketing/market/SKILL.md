@@ -54,6 +54,8 @@ Every sub-skill is also a direct slash command: `/market-audit <url>` is equival
 
 ## Procedure
 
+**Paths:** `${HERMES_SKILL_DIR}` is this skill's folder. If it still appears literally (older Hermes), use the `[Skill directory: ...]` path from the activation message, or find this skill's `SKILL.md` with `search_files` and use its folder.
+
 1. Parse the first word after `/market` as the command and the rest as the input.
 2. For `quick`, run the Quick Snapshot below inside this skill.
 3. For every other command, load the sub-skill with `skill_view("market-<command>")` and follow it exactly, passing the input along. Do not improvise the analysis from this router.

@@ -41,6 +41,8 @@ Snapshots every site in a watchlist (your clients and their competitors) and rep
 
 ## Procedure
 
+**Paths:** `${HERMES_SKILL_DIR}` is this skill's folder. If it still appears literally (older Hermes), use the `[Skill directory: ...]` path from the activation message, or find this skill's `SKILL.md` with `search_files` and use its folder.
+
 1. **Watchlist.** Read the path from `marketing.watchlist` (default `~/marketing-reports/watchlist.txt`).
    - If it does not exist, copy `${HERMES_SKILL_DIR}/templates/watchlist.txt` there, then ask the user with `clarify` which sites to watch and write them into the file (one `Label | URL` per line). During a scheduled run with no watchlist, reply with setup instructions instead.
    - To add or remove sites on request, edit that file with `read_file` / `patch`.

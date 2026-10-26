@@ -30,6 +30,7 @@ metadata:
 - **Language:** write client-facing output in `marketing.language` (default `vi` = Vietnamese). Keep standard marketing terms (CTA, CRO, SEO, ROAS...) and file names in English.
 - **Missing info:** if a required input (URL, product, audience, offer, budget) is missing, ask once with `clarify`, batching all questions in one call, instead of guessing.
 - **Reply:** finish with a short chat summary (at most ~15 lines; messaging apps truncate long replies) and put the absolute path of every saved file on its own line so the gateway delivers it as an attachment.
+- **Paths:** `${HERMES_SKILL_DIR}` is this skill's folder. If it still appears literally (older Hermes), use the `[Skill directory: ...]` path from the activation message, or find this skill's `SKILL.md` with `search_files` and use its folder.
 - **Bundled helper:** `python3 ${HERMES_SKILL_DIR}/scripts/analyze_page.py <url>` (Python stdlib only) prints JSON with title, meta tags, headings, links, images/alt text, schema, tracking scripts and CTAs. Run it first; it works even without the web toolset.
 
 ## Skill Purpose

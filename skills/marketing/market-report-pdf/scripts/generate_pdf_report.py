@@ -12,6 +12,10 @@ import json
 import os
 from datetime import datetime
 
+# Private dependency/font folder used by install.sh when pip/apt are unavailable (containers, no sudo)
+DATA_DIR = os.path.join(os.environ.get("XDG_DATA_HOME") or os.path.expanduser("~/.local/share"), "ai-marketing-hermes")
+sys.path.insert(0, os.path.join(DATA_DIR, "pylib"))
+
 try:
     from reportlab.lib.pagesizes import letter
     from reportlab.lib.units import inch
@@ -32,6 +36,7 @@ except ImportError:
 # Unicode fonts (Vietnamese diacritics need a TTF; built-in Helvetica cannot render them).
 # Override with MARKETING_PDF_FONT / MARKETING_PDF_FONT_BOLD (absolute .ttf paths).
 FONT_CANDIDATES = [
+    (os.path.join(DATA_DIR, "fonts", "DejaVuSans.ttf"), os.path.join(DATA_DIR, "fonts", "DejaVuSans-Bold.ttf")),
     ("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"),
     ("/usr/share/fonts/dejavu/DejaVuSans.ttf", "/usr/share/fonts/dejavu/DejaVuSans-Bold.ttf"),
     ("/usr/share/fonts/truetype/noto/NotoSans-Regular.ttf", "/usr/share/fonts/truetype/noto/NotoSans-Bold.ttf"),

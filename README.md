@@ -37,7 +37,9 @@ cd ~/ai-marketing-hermes
 | `--external` | Thêm repo vào `skills.external_dirs` trong `~/.hermes/config.yaml`. Cập nhật: `git -C ~/ai-marketing-hermes pull`. |
 | `--with-pdf` | Cài `reportlab` cho báo cáo PDF. |
 
-Gói hệ thống nên có trên VPS (Debian/Ubuntu): `sudo apt install python3 fonts-dejavu-core` (font để PDF hiển thị tiếng Việt). Nếu `pip` bị chặn: `sudo apt install python3-reportlab`.
+`--with-pdf` tự lo phần PDF kể cả khi Hermes chạy trong container không có `sudo`: thử `pip --user`, nếu bị chặn thì cài reportlab vào `~/.local/share/ai-marketing-hermes/pylib`, và tải font DejaVu (để PDF hiện tiếng Việt) vào `~/.local/share/ai-marketing-hermes/fonts` nếu máy chưa có font Unicode.
+
+`--external` tự thêm repo vào `skills.external_dirs`, kể cả khi `config.yaml` đã có mục `skills:` (giữ nguyên comment, sao lưu ra `config.yaml.bak-aims`).
 
 Sau khi cài, mở phiên Hermes mới (hoặc gửi một tin nhắn bất kỳ trong phiên đang mở) để Hermes nhận skill.
 

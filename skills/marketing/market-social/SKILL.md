@@ -30,6 +30,7 @@ metadata:
 - **Language:** write client-facing output in `marketing.language` (default `vi` = Vietnamese). Keep standard marketing terms (CTA, CRO, SEO, ROAS...) and file names in English.
 - **Missing info:** if a required input (URL, product, audience, offer, budget) is missing, ask once with `clarify`, batching all questions in one call, instead of guessing.
 - **Reply:** finish with a short chat summary (at most ~15 lines; messaging apps truncate long replies) and put the absolute path of every saved file on its own line so the gateway delivers it as an attachment.
+- **Paths:** `${HERMES_SKILL_DIR}` is this skill's folder. If it still appears literally (older Hermes), use the `[Skill directory: ...]` path from the activation message, or find this skill's `SKILL.md` with `search_files` and use its folder.
 - **Bundled helper:** `python3 ${HERMES_SKILL_DIR}/scripts/social_calendar.py "<topic>" linkedin,instagram,tiktok 30` prints a JSON calendar skeleton (pillars, formats, posting days). Use it as the scaffold, then write the actual posts. Lay out SOCIAL-CALENDAR.md following `${HERMES_SKILL_DIR}/templates/content-calendar.md`.
 - **Trends (optional):** if `x_search` is available, check current conversations on the topic before choosing hooks; otherwise use `web_search`.
 - **Visuals (optional):** if the user asks for visuals and `image_generate` is available, generate up to 3 images for week 1 posts and list their absolute paths.

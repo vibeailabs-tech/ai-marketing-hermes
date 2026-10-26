@@ -51,7 +51,7 @@ echo
 if command -v hermes >/dev/null 2>&1; then
   green "✓ hermes CLI found"
 else
-  yellow "⚠ hermes CLI not found in PATH (continuing; files are installed for when it is)"
+  echo "  (hermes CLI not in PATH — normal when this runs inside a Hermes container/session)"
 fi
 mkdir -p "$HERMES_HOME"
 
@@ -68,19 +68,11 @@ if [ "$MODE" = "copy" ]; then
   yellow "Note: re-running the installer overwrites local edits Hermes made to these skills."
 else
   CONFIG="$HERMES_HOME/config.yaml"
-  touch "$CONFIG"
-  if grep -qF "$REPO_DIR/skills" "$CONFIG"; then
-    green "✓ $REPO_DIR/skills already listed in $CONFIG"
-  elif ! grep -qE '^skills:' "$CONFIG"; then
-    printf '\nskills:\n  external_dirs:\n    - %s\n' "$REPO_DIR/skills" >> "$CONFIG"
-    green "✓ Added $REPO_DIR/skills to skills.external_dirs in $CONFIG"
+  if python3 "$REPO_DIR/tools/add_external_dir.py" "$CONFIG" "$REPO_DIR/skills"; then
+    green "✓ $REPO_DIR/skills is in skills.external_dirs ($CONFIG)"
   else
-    yellow "⚠ $CONFIG already has a 'skills:' section. Add this line under skills.external_dirs manually:"
-    echo
-    echo "skills:"
-    echo "  external_dirs:"
+    red "✗ Could not edit $CONFIG automatically. Add this under skills.external_dirs:"
     echo "    - $REPO_DIR/skills"
-    echo
   fi
   echo "Update later with: git -C $REPO_DIR pull"
 fi
@@ -98,20 +90,52 @@ OUT_DIR="$HOME/marketing-reports"
 mkdir -p "$OUT_DIR"
 [ -f "$OUT_DIR/watchlist.txt" ] || cp "$SRC/market-watch/templates/watchlist.txt" "$OUT_DIR/watchlist.txt"
 
-# Python checks
+# Python checks. PDF deps fall back to a private folder when pip/apt are blocked (containers, no sudo).
+DATA_DIR="${XDG_DATA_HOME:-$HOME/.local/share}/ai-marketing-hermes"
+PYLIB="$DATA_DIR/pylib"
+FONT_DIR="$DATA_DIR/fonts"
+has_reportlab() { PYTHONPATH="$PYLIB${PYTHONPATH:+:$PYTHONPATH}" python3 -c "import reportlab" 2>/dev/null; }
+has_font() {
+  for f in /usr/share/fonts/truetype/dejavu/DejaVuSans.ttf /usr/share/fonts/dejavu/DejaVuSans.ttf \
+           /usr/share/fonts/truetype/noto/NotoSans-Regular.ttf /usr/share/fonts/truetype/liberation/LiberationSans-Regular.ttf \
+           /System/Library/Fonts/Supplemental/Arial.ttf "$FONT_DIR/DejaVuSans.ttf"; do
+    [ -f "$f" ] && return 0
+  done
+  return 1
+}
+
 echo
 if command -v python3 >/dev/null 2>&1; then
   green "✓ $(python3 --version)"
-  if python3 -c "import reportlab" 2>/dev/null; then
-    green "✓ reportlab installed (PDF reports ready)"
-  elif [ "$WITH_PDF" = 1 ]; then
-    python3 -m pip install --user 'reportlab>=4.0' \
-      || red "pip install failed. On Debian/Ubuntu try: sudo apt install python3-reportlab"
-  else
-    yellow "⚠ reportlab missing (needed for /market report-pdf). Re-run with --with-pdf or: sudo apt install python3-reportlab"
+  if ! has_reportlab && [ "$WITH_PDF" = 1 ]; then
+    RL_SPEC='reportlab>=4.0'
+    python3 -c 'import sys; sys.exit(sys.version_info < (3, 10))' || RL_SPEC='reportlab>=4.0,<4.5'   # reportlab 5 needs 3.10+
+    echo "Installing $RL_SPEC..."
+    python3 -m pip install -q --user "$RL_SPEC" 2>/dev/null \
+      || python3 -m pip install -q --target "$PYLIB" "$RL_SPEC" 2>/dev/null \
+      || { command -v uv >/dev/null 2>&1 && uv pip install -q --python "$(command -v python3)" --target "$PYLIB" "$RL_SPEC" 2>/dev/null; } \
+      || true
   fi
-  if [ "$(uname)" = "Linux" ] && ! ls /usr/share/fonts/truetype/dejavu/DejaVuSans.ttf >/dev/null 2>&1; then
-    yellow "⚠ DejaVu fonts not found; Vietnamese in PDFs needs a Unicode font: sudo apt install fonts-dejavu-core"
+  if has_reportlab; then
+    green "✓ reportlab available (PDF reports ready)"
+  else
+    yellow "⚠ reportlab missing (needed for /market report-pdf). Re-run with --with-pdf, or: sudo apt install python3-reportlab"
+  fi
+  if ! has_font && [ "$WITH_PDF" = 1 ]; then
+    echo "Downloading DejaVu fonts (Vietnamese support in PDFs)..."
+    TMP_FONT="$(mktemp -d)"
+    if curl -fsSL -o "$TMP_FONT/dejavu.tar.bz2" \
+         https://github.com/dejavu-fonts/dejavu-fonts/releases/download/version_2_37/dejavu-fonts-ttf-2.37.tar.bz2 \
+       && tar -xjf "$TMP_FONT/dejavu.tar.bz2" -C "$TMP_FONT"; then
+      mkdir -p "$FONT_DIR"
+      cp "$TMP_FONT"/dejavu-fonts-ttf-2.37/ttf/DejaVuSans.ttf "$TMP_FONT"/dejavu-fonts-ttf-2.37/ttf/DejaVuSans-Bold.ttf "$FONT_DIR/"
+    fi
+    rm -rf "$TMP_FONT"
+  fi
+  if has_font; then
+    green "✓ Unicode font available for PDFs"
+  else
+    yellow "⚠ No Unicode font: Vietnamese in PDFs may break. Re-run with --with-pdf, or: sudo apt install fonts-dejavu-core"
   fi
 else
   red "✗ python3 not found — helper scripts will not run"
