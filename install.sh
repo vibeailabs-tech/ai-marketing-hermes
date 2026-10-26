@@ -7,7 +7,7 @@
 #   ./install.sh --with-pdf      Also install reportlab for PDF reports (combine with either mode)
 #
 # Remote (clone + install):
-#   AIMS_REPO_URL=https://github.com/<you>/<repo>.git bash -c "$(curl -fsSL <raw-url>/install.sh)"
+#   AIMS_REPO_URL=https://github.com/vibeailabs-tech/ai-marketing-hermes.git bash -c "$(curl -fsSL https://raw.githubusercontent.com/vibeailabs-tech/ai-marketing-hermes/main/install.sh)"
 
 set -euo pipefail
 

@@ -17,14 +17,14 @@ Chuyển từ [zubair-trabzada/ai-marketing-claude](https://github.com/zubair-tr
 Nhắn cho Hermes (Telegram/CLI):
 
 ```
-Clone https://github.com/<you>/<repo>.git vào ~/ai-marketing-hermes rồi chạy
+Clone https://github.com/vibeailabs-tech/ai-marketing-hermes.git vào ~/ai-marketing-hermes rồi chạy
 ~/ai-marketing-hermes/install.sh --external --with-pdf và báo kết quả cho tôi.
 ```
 
 ### Cách 2 — tự chạy lệnh
 
 ```bash
-git clone https://github.com/<you>/<repo>.git ~/ai-marketing-hermes
+git clone https://github.com/vibeailabs-tech/ai-marketing-hermes.git ~/ai-marketing-hermes
 cd ~/ai-marketing-hermes
 ./install.sh --external --with-pdf     # skill đọc thẳng từ repo; cập nhật bằng git pull
 # hoặc
@@ -44,8 +44,8 @@ Sau khi cài, mở phiên Hermes mới (hoặc gửi một tin nhắn bất kỳ
 ### Cách 3 — cài qua Skills Hub (có quét bảo mật)
 
 ```bash
-hermes skills install <you>/<repo>/skills/marketing/market-audit
-hermes skills install <you>/<repo>/skills/marketing/market       # cài từng skill cần dùng
+hermes skills install vibeailabs-tech/ai-marketing-hermes/skills/marketing/market-audit
+hermes skills install vibeailabs-tech/ai-marketing-hermes/skills/marketing/market       # cài từng skill cần dùng
 ```
 
 Mỗi skill tự chứa đủ script/template nên cài lẻ vẫn chạy. Cách này không cài bundle; copy thư mục `bundles/` vào `~/.hermes/skill-bundles/` nếu cần.
