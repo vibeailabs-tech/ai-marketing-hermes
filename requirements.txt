@@ -1,0 +1,4 @@
+# AI Marketing Suite — Python dependencies
+# All helper scripts use the Python standard library only.
+# Optional: PDF reports (market-report-pdf)
+reportlab>=4.0

@@ -1,0 +1,6 @@
+# Marketing watchlist — one site per line. Optional label before a "|".
+# Lines starting with # are ignored.
+# Copy this file to the path in marketing.watchlist (default ~/marketing-reports/watchlist.txt).
+
+My Client | https://example.com
+Competitor A | https://competitor-a.example

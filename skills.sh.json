@@ -1,0 +1,8 @@
+{
+  "$schema": "https://skills.sh/schemas/skills.sh.schema.json",
+  "groupings": [
+    { "title": "Marketing — Audit & Analysis", "skills": ["market", "market-audit", "market-seo", "market-landing", "market-funnel", "market-competitors", "market-watch"] },
+    { "title": "Marketing — Content", "skills": ["market-brand", "market-copy", "market-social", "market-emails", "market-ads", "market-launch"] },
+    { "title": "Marketing — Client Deliverables", "skills": ["market-proposal", "market-report", "market-report-pdf"] }
+  ]
+}
