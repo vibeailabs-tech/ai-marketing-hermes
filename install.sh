@@ -71,7 +71,7 @@ else
   if python3 "$REPO_DIR/tools/add_external_dir.py" "$CONFIG" "$REPO_DIR/skills"; then
     green "✓ $REPO_DIR/skills is in skills.external_dirs ($CONFIG)"
   else
-    red "✗ Could not edit $CONFIG automatically. Add this under skills.external_dirs:"
+    red "✗ Could not edit $CONFIG automatically (see message above). Make sure there is ONE top-level skills: block with:"
     echo "    - $REPO_DIR/skills"
   fi
   echo "Update later with: git -C $REPO_DIR pull"

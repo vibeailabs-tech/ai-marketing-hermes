@@ -71,6 +71,11 @@ def main():
             lines = f.readlines()
     except FileNotFoundError:
         lines = []
+    tops = [i + 1 for i, l in enumerate(lines) if re.match(r"^skills:", l)]
+    if len(tops) > 1:
+        print(f"duplicate top-level 'skills:' keys at lines {tops}; merge them into one block "
+              f"(YAML keeps only one) and keep '- {path}' under external_dirs", file=sys.stderr)
+        return 2
     if any(re.match(rf"^\s*-\s*['\"]?{re.escape(path)}['\"]?\s*(#.*)?$", l) for l in lines):
         print("already present")
         return 0
